@@ -1,0 +1,118 @@
+# yaml-language-server: $schema=https://goreleaser.com/static/schema.json
+version: 2
+
+project_name: thingsexporter
+
+before:
+  hooks:
+    - go mod tidy
+
+builds:
+  - id: thingsexporter
+    main: ./cmd/thingsexporter
+    binary: thingsexporter
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - darwin
+    goarch:
+      - amd64
+      - arm64
+    flags:
+      - -trimpath
+    ldflags:
+      - -s -w
+      - -X github.com/jtprogru/thingsexporter/internal/version.Version={{.Version}}
+      - -X github.com/jtprogru/thingsexporter/internal/version.Commit={{.Commit}}
+      - -X github.com/jtprogru/thingsexporter/internal/version.Date={{.Date}}
+      - -X github.com/jtprogru/thingsexporter/internal/version.BuiltBy=goreleaser
+
+archives:
+  - id: default
+    formats: [tar.gz]
+    name_template: >-
+      {{ .ProjectName }}_{{ .Version }}_
+      {{- title .Os }}_
+      {{- if eq .Arch "amd64" }}x86_64
+      {{- else if eq .Arch "386" }}i386
+      {{- else }}{{ .Arch }}{{ end }}
+
+checksum:
+  name_template: "checksums.txt"
+  algorithm: sha256
+
+sboms:
+  - id: archive-sbom
+    artifacts: archive
+    documents:
+      - "${artifact}.sbom.json"
+
+signs:
+  - id: cosign-checksum
+    cmd: cosign
+    signature: "${artifact}.bundle"
+    args:
+      - sign-blob
+      - "--yes"
+      - "--bundle=${signature}"
+      - "${artifact}"
+    artifacts: checksum
+    output: true
+
+snapshot:
+  version_template: "{{ incpatch .Version }}-next"
+
+changelog:
+  sort: asc
+  use: github
+  groups:
+    - title: Features
+      regexp: '^.*?feat(\([[:word:]]+\))??!?:.+$'
+      order: 0
+    - title: Bug fixes
+      regexp: '^.*?fix(\([[:word:]]+\))??!?:.+$'
+      order: 1
+    - title: Others
+      order: 999
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
+      - "^chore:"
+      - "Merge pull request"
+      - "Merge branch"
+
+release:
+  github:
+    owner: jtprogru
+    name: thingsexporter
+  draft: false
+  prerelease: auto
+
+# NOTE: GoReleaser v2 deprecated `brews` (formula) in favor of `homebrew_casks` even
+# for CLI tools — see https://goreleaser.com/deprecations#brews. The end-user UX is
+# identical (`brew install jtprogru/tap/thingsexporter`); the cask is the modern path
+# for distributing pre-compiled binaries via Homebrew.
+homebrew_casks:
+  - name: thingsexporter
+    repository:
+      owner: jtprogru
+      name: homebrew-tap
+      branch: main
+      token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
+    homepage: "https://github.com/jtprogru/thingsexporter"
+    description: "Export Things 3 SQLite database to JSON or Markdown"
+    license: "MIT"
+    url:
+      verified: "github.com/jtprogru/thingsexporter"
+    commit_author:
+      name: goreleaserbot
+      email: bot@goreleaser.com
+    commit_msg_template: "chore(thingsexporter): bring cask to {{ .Tag }}"
+    hooks:
+      post:
+        install: |
+          if OS.mac?
+            system_command "/usr/bin/xattr", args: ["-dr", "com.apple.quarantine", "#{staged_path}/thingsexporter"]
+          end
