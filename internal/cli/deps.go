@@ -19,8 +19,6 @@ import (
 type Deps struct {
 	Stdout, Stderr io.Writer
 	Stdin          io.Reader
-	Env            func(string) string
-	Goos           string
 	Clock          func() time.Time
 
 	OpenRepo   func(path string) (*sqlitestore.Repository, error)
@@ -62,8 +60,6 @@ func DefaultDeps() Deps {
 		Stdout:              os.Stdout,
 		Stderr:              os.Stderr,
 		Stdin:               os.Stdin,
-		Env:                 os.Getenv,
-		Goos:                runtime.GOOS,
 		Clock:               time.Now,
 		OpenRepo:            openRepo,
 		DiscoverDB:          discoverDB,
