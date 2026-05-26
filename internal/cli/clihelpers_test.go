@@ -104,8 +104,6 @@ func newTestDeps(t testing.TB) (cli.Deps, *bytes.Buffer, *bytes.Buffer) {
 		Stdout:   stdout,
 		Stderr:   stderr,
 		Stdin:    strings.NewReader(""),
-		Env:      func(string) string { return "" },
-		Goos:     "darwin",
 		Clock:    func() time.Time { return time.Date(2026, 1, 1, 0, 0, 0, 0, time.UTC) },
 		OpenRepo: openRepo,
 		DiscoverDB: func() (string, bool) {
