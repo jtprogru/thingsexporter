@@ -1,0 +1,69 @@
+version: '3'
+
+vars:
+  BIN_DIR: bin
+  CMD_PATH: ./cmd/thingsexporter
+
+tasks:
+  default:
+    desc: List all available tasks
+    cmds:
+      - task --list-all
+
+  test:
+    desc: Run all unit + property tests
+    cmds:
+      - go test ./...
+
+  test-race:
+    desc: Run all tests with race detector
+    cmds:
+      - go test -race ./...
+
+  build:
+    desc: Build thingsexporter binary for current host
+    cmds:
+      - mkdir -p {{.BIN_DIR}}
+      - go build -o {{.BIN_DIR}}/thingsexporter {{.CMD_PATH}}
+
+  lint:
+    desc: Run golangci-lint
+    cmds:
+      - golangci-lint run
+
+  fmt:
+    desc: Format Go source
+    cmds:
+      - go fmt ./...
+      - goimports -w .
+
+  tidy:
+    desc: Tidy go.mod / go.sum
+    cmds:
+      - go mod tidy
+
+  vuln:
+    desc: Run govulncheck
+    cmds:
+      - govulncheck ./...
+
+  release-check:
+    desc: Validate GoReleaser config + snapshot build
+    cmds:
+      - goreleaser check
+      - goreleaser build --snapshot --clean --single-target
+
+  run:
+    desc: Build and run thingsexporter
+    cmds:
+      - task: build
+      - "{{.BIN_DIR}}/thingsexporter {{.CLI_ARGS}}"
+
+  cross-compile:
+    desc: Cross-compile for linux/darwin × amd64/arm64
+    cmds:
+      - mkdir -p {{.BIN_DIR}}
+      - GOOS=linux   GOARCH=amd64 go build -o {{.BIN_DIR}}/thingsexporter-linux-amd64  {{.CMD_PATH}}
+      - GOOS=linux   GOARCH=arm64 go build -o {{.BIN_DIR}}/thingsexporter-linux-arm64  {{.CMD_PATH}}
+      - GOOS=darwin  GOARCH=amd64 go build -o {{.BIN_DIR}}/thingsexporter-darwin-amd64 {{.CMD_PATH}}
+      - GOOS=darwin  GOARCH=arm64 go build -o {{.BIN_DIR}}/thingsexporter-darwin-arm64 {{.CMD_PATH}}
