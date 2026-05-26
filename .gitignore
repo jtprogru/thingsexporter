@@ -1,0 +1,13 @@
+bin/
+dist/
+vendor/
+*.test
+*.out
+cover.out
+*.sqlite
+*.sqlite-wal
+*.sqlite-shm
+testdata/rapid/**/*.fail
+/pipeline.sh
+.claude/
+.serena/
