@@ -62,7 +62,6 @@ func TestExportCmd_unknownInclude_exit2(t *testing.T) {
 func TestExportCmd_missingDBNonMac(t *testing.T) {
 	t.Parallel()
 	deps, _, _ := newTestDeps(t)
-	deps.Goos = "linux"
 	deps.DiscoverDB = func() (string, bool) { return "", false }
 	err := runCmd(t, deps, "--include", "all")
 	require.Error(t, err)
