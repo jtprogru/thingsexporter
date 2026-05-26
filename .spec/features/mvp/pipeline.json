@@ -1,0 +1,21 @@
+{
+  "feature": "mvp",
+  "phase": "done",
+  "created_at": "2026-05-25T19:22:14Z",
+  "current_artifact": null,
+  "history": [
+    {"phase": "explore", "artifact": ".spec/features/mvp/explore.md", "approved_at": "2026-05-25T19:28:36Z"},
+    {"phase": "requirements", "artifact": ".spec/features/mvp/requirements.md", "approved_at": "2026-05-25T19:51:52Z"},
+    {"phase": "design", "artifact": ".spec/features/mvp/design.md", "approved_at": "2026-05-25T20:26:59Z"},
+    {"phase": "task-plan", "artifact": ".spec/features/mvp/task-plan.md", "approved_at": "2026-05-25T20:38:57Z"},
+    {"phase": "implementation", "artifact": ".spec/features/mvp/implementation.md", "approved_at": "2026-05-25T21:38:11Z"},
+    {"phase": "review", "artifact": ".spec/features/mvp/review.md", "approved_at": "2026-05-25T21:49:14Z"}
+  ],
+  "review_base_commit": "HEAD",
+  "branch": null,
+  "worktree": null,
+  "last_completed_task": null,
+  "finish_action": "keep",
+  "finished_at": "2026-05-25T21:49:29Z",
+  "finish_base": null
+}
