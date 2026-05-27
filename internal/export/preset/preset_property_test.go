@@ -145,6 +145,31 @@ func PropPresetExclusions(t *rapid.T) {
 		}
 	}
 
+	// Structure — Areas + Tags + Hierarchy без Tasks и связанных коллекций.
+	st := preset.Structure{}.Apply(in)
+	if st.Tasks != nil || st.ChecklistItems != nil || st.Contacts != nil ||
+		st.Tombstones != nil || st.Links != nil {
+		t.Fatalf("Structure preset must drop Tasks and all task-related collections")
+	}
+	if len(st.Areas) != len(in.Areas) {
+		t.Fatalf("Structure must preserve areas: got %d want %d", len(st.Areas), len(in.Areas))
+	}
+	if len(st.Tags) != len(in.Tags) {
+		t.Fatalf("Structure must preserve tags: got %d want %d", len(st.Tags), len(in.Tags))
+	}
+	if in.Hierarchy != nil && st.Hierarchy == nil {
+		t.Fatalf("Structure must preserve Hierarchy when input has one")
+	}
+	if st.Meta.Counts.Tasks != nil {
+		t.Fatalf("Structure must not set Counts.Tasks")
+	}
+	if st.Meta.Counts.Areas == nil || *st.Meta.Counts.Areas != len(in.Areas) {
+		t.Fatalf("Structure Counts.Areas must equal len(Areas)")
+	}
+	if st.Meta.Counts.Tags == nil || *st.Meta.Counts.Tags != len(in.Tags) {
+		t.Fatalf("Structure Counts.Tags must equal len(Tags)")
+	}
+
 	// TasksProjects — Tasks с *Title + коллекция Areas; tags/checklist на задачах nil.
 	tp := preset.TasksProjects{}.Apply(in)
 	if tp.Tags != nil || tp.ChecklistItems != nil || tp.Contacts != nil ||

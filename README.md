@@ -60,6 +60,9 @@ thingsexporter --include tasks+tags
 # задачи + области, проекты, заголовки
 thingsexporter --include tasks+projects
 
+# оглавление — области, теги и иерархия без тел задач
+thingsexporter --include structure
+
 # всё (default)
 thingsexporter --include all
 ```
@@ -70,7 +73,7 @@ thingsexporter --include all
 --db <path>          путь к main.sqlite (default: auto-discover на macOS)
 --out <path|->       выходной файл, '-' = stdout (default: -)
 --format json|markdown   формат вывода (default: json)
---include <preset>   состав: all|tasks|tasks+tags|tasks+projects (default: all)
+--include <preset>   состав: all|structure|tasks|tasks+tags|tasks+projects (default: all)
 --indent <int>       отступ JSON, 0 = компактный (default: 2)
 --no-blobs           не выводить BLOB-поля (по умолчанию они идут как hex)
 --quiet              подавить сводку в stderr

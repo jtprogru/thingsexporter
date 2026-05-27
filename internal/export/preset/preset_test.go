@@ -47,8 +47,8 @@ func TestRegistryLookup_unknown(t *testing.T) {
 
 func TestRegistry_NamesSorted(t *testing.T) {
 	t.Parallel()
-	r := preset.NewRegistry(preset.TasksTags{}, preset.All{}, preset.Tasks{}, preset.TasksProjects{})
-	require.Equal(t, []string{"all", "tasks", "tasks+projects", "tasks+tags"}, r.Names())
+	r := preset.NewRegistry(preset.TasksTags{}, preset.All{}, preset.Tasks{}, preset.TasksProjects{}, preset.Structure{})
+	require.Equal(t, []string{"all", "structure", "tasks", "tasks+projects", "tasks+tags"}, r.Names())
 }
 
 func TestPresetAll_identity(t *testing.T) {
@@ -100,6 +100,24 @@ func TestPresetTasksTags_strips(t *testing.T) {
 	require.NotNil(t, out.Meta.Counts.Tasks)
 	require.NotNil(t, out.Meta.Counts.Tags)
 	require.Nil(t, out.Meta.Counts.Areas)
+}
+
+func TestPresetStructure_keepsAreasTagsHierarchyDropsTasks(t *testing.T) {
+	t.Parallel()
+	out := preset.Structure{}.Apply(full())
+	require.Len(t, out.Areas, 1)
+	require.Len(t, out.Tags, 1)
+	require.NotNil(t, out.Hierarchy)
+	require.Nil(t, out.Tasks)
+	require.Nil(t, out.ChecklistItems)
+	require.Nil(t, out.Contacts)
+	require.Nil(t, out.Tombstones)
+	require.Nil(t, out.Links)
+	require.NotNil(t, out.Meta.Counts.Areas)
+	require.Equal(t, 1, *out.Meta.Counts.Areas)
+	require.NotNil(t, out.Meta.Counts.Tags)
+	require.Equal(t, 1, *out.Meta.Counts.Tags)
+	require.Nil(t, out.Meta.Counts.Tasks)
 }
 
 func TestPresetTasksProjects_strips(t *testing.T) {
