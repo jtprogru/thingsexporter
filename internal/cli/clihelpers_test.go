@@ -108,7 +108,7 @@ func newTestDeps(t testing.TB) (cli.Deps, *bytes.Buffer, *bytes.Buffer) {
 			return dbPath, true
 		},
 		Writers:             export.NewRegistry(jsonwriter.Writer{}, mdwriter.Writer{}),
-		Presets:             preset.NewRegistry(preset.All{}, preset.Tasks{}, preset.TasksTags{}, preset.TasksProjects{}),
+		Presets:             preset.NewRegistry(preset.All{}, preset.Structure{}, preset.Tasks{}, preset.TasksTags{}, preset.TasksProjects{}),
 		SupportedDBVersions: []int{26},
 	}
 	return deps, stdout, stderr

@@ -113,6 +113,32 @@ func (TasksTags) Apply(in things.Export) things.Export {
 	}
 }
 
+// Structure — пресет "structure": оглавление выгрузки.
+// Возвращает Areas + Tags + Hierarchy без коллекции Tasks и связанных
+// объектов (ChecklistItems, Contacts, Tombstones, Links). Полезно
+// для быстрого обзора организационной структуры базы Things 3
+// без выгрузки тел задач.
+type Structure struct{}
+
+func (Structure) Name() string { return "structure" }
+func (Structure) Apply(in things.Export) things.Export {
+	return things.Export{
+		Schema: in.Schema,
+		Meta: things.Meta{
+			Source:     in.Meta.Source,
+			ExportedAt: in.Meta.ExportedAt,
+			Counts: things.Counts{
+				Areas: intPtr(len(in.Areas)),
+				Tags:  intPtr(len(in.Tags)),
+			},
+			DBMetaRows: in.Meta.DBMetaRows,
+		},
+		Areas:     in.Areas,
+		Tags:      in.Tags,
+		Hierarchy: in.Hierarchy,
+	}
+}
+
 // TasksProjects — пресет "tasks+projects": Tasks с *Title-полями + коллекция Areas.
 type TasksProjects struct{}
 

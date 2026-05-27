@@ -50,7 +50,7 @@ func addExportFlags(cmd *cobra.Command, f *exportFlags) {
 	cmd.Flags().StringVar(&f.db, "db", f.db, "Path to Things 3 main.sqlite (default: auto-discover on macOS)")
 	cmd.Flags().StringVar(&f.out, "out", f.out, "Output path ('-' for stdout)")
 	cmd.Flags().StringVar(&f.format, "format", f.format, "Output format: json | markdown")
-	cmd.Flags().StringVar(&f.include, "include", f.include, "Content preset: all | tasks | tasks+tags | tasks+projects")
+	cmd.Flags().StringVar(&f.include, "include", f.include, "Content preset: all | structure | tasks | tasks+tags | tasks+projects")
 	cmd.Flags().IntVar(&f.indent, "indent", f.indent, "JSON indent (0 = compact)")
 	cmd.Flags().BoolVar(&f.noBlobs, "no-blobs", f.noBlobs, "Strip BLOB fields from output (default: hex-encoded)")
 	cmd.Flags().BoolVar(&f.quiet, "quiet", f.quiet, "Suppress summary in stderr")

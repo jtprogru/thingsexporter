@@ -34,7 +34,7 @@ type Deps struct {
 // DefaultDeps собирает рабочие зависимости для main-процесса.
 func DefaultDeps() Deps {
 	writers := export.NewRegistry(jsonwriter.Writer{}, mdwriter.Writer{})
-	presets := preset.NewRegistry(preset.All{}, preset.Tasks{}, preset.TasksTags{}, preset.TasksProjects{})
+	presets := preset.NewRegistry(preset.All{}, preset.Structure{}, preset.Tasks{}, preset.TasksTags{}, preset.TasksProjects{})
 
 	openRepo := func(path string) (*sqlitestore.Repository, error) {
 		db, err := sqlitestore.Open(path)
