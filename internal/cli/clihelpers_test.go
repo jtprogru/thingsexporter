@@ -5,7 +5,6 @@ import (
 	"context"
 	"database/sql"
 	"path/filepath"
-	"strings"
 	"testing"
 	"time"
 
@@ -103,7 +102,6 @@ func newTestDeps(t testing.TB) (cli.Deps, *bytes.Buffer, *bytes.Buffer) {
 	deps := cli.Deps{
 		Stdout:   stdout,
 		Stderr:   stderr,
-		Stdin:    strings.NewReader(""),
 		Clock:    func() time.Time { return time.Date(2026, 1, 1, 0, 0, 0, 0, time.UTC) },
 		OpenRepo: openRepo,
 		DiscoverDB: func() (string, bool) {

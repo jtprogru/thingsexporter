@@ -18,7 +18,6 @@ import (
 // поля подменяются на буферы и фейки.
 type Deps struct {
 	Stdout, Stderr io.Writer
-	Stdin          io.Reader
 	Clock          func() time.Time
 
 	OpenRepo   func(path string) (*sqlitestore.Repository, error)
@@ -59,7 +58,6 @@ func DefaultDeps() Deps {
 	return Deps{
 		Stdout:              os.Stdout,
 		Stderr:              os.Stderr,
-		Stdin:               os.Stdin,
 		Clock:               time.Now,
 		OpenRepo:            openRepo,
 		DiscoverDB:          discoverDB,
