@@ -23,7 +23,6 @@ func NewRootCmd(deps Deps) *cobra.Command {
 	addExportFlags(root, &f)
 	root.SetOut(deps.Stdout)
 	root.SetErr(deps.Stderr)
-	root.SetIn(deps.Stdin)
 
 	root.AddCommand(newExportCmd(deps))
 	root.AddCommand(newInspectCmd(deps))
