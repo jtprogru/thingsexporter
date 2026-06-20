@@ -1,9 +1,9 @@
-// Package things содержит доменные типы Things 3 экспорта,
-// конвертеры дат, маппинг enum-кодов и сборку Export-структуры.
+// Package things contains the domain types for the Things 3 export,
+// date converters, enum-code mapping, and assembly of the Export structure.
 package things
 
-// Export — корневой контейнер выгрузки.
-// Поля, нерелевантные текущему пресету, опускаются через omitempty.
+// Export is the root container of the export.
+// Fields irrelevant to the current preset are omitted via omitempty.
 type Export struct {
 	Schema         string          `json:"schema"`
 	Meta           Meta            `json:"meta"`
@@ -17,7 +17,7 @@ type Export struct {
 	Hierarchy      *Hierarchy      `json:"hierarchy,omitempty"`
 }
 
-// Meta — служебные данные экспорта.
+// Meta holds the service metadata of the export.
 type Meta struct {
 	Source     string    `json:"source"`
 	ExportedAt string    `json:"exportedAt"`
@@ -25,8 +25,8 @@ type Meta struct {
 	DBMetaRows []MetaRow `json:"db_meta_rows"`
 }
 
-// Counts — счётчики коллекций. Указатели присутствуют только для
-// коллекций, реально включённых в Export (ADR-3).
+// Counts holds collection counters. Pointers are present only for
+// collections actually included in the Export (ADR-3).
 type Counts struct {
 	Areas          *int `json:"areas,omitempty"`
 	Tags           *int `json:"tags,omitempty"`
@@ -38,13 +38,13 @@ type Counts struct {
 	AreaTagLinks   *int `json:"areaTagLinks,omitempty"`
 }
 
-// MetaRow — строка таблицы Meta как есть.
+// MetaRow is a row of the Meta table as is.
 type MetaRow struct {
 	Key   string `json:"key"`
 	Value string `json:"value"`
 }
 
-// Area — доменная модель TMArea.
+// Area is the domain model of TMArea.
 type Area struct {
 	UUID         string     `json:"uuid"`
 	Title        *string    `json:"title"`
@@ -55,7 +55,7 @@ type Area struct {
 	Tags         []TagRef   `json:"tags"`
 }
 
-// Tag — доменная модель TMTag.
+// Tag is the domain model of TMTag.
 type Tag struct {
 	UUID         string     `json:"uuid"`
 	Title        *string    `json:"title"`
@@ -67,7 +67,7 @@ type Tag struct {
 	ParentTitle  *string    `json:"parentTitle"`
 }
 
-// Task — доменная модель TMTask со всеми обогащёнными полями.
+// Task is the domain model of TMTask with all enriched fields.
 type Task struct {
 	UUID                        string  `json:"uuid"`
 	LeavesTombstone             *int64  `json:"leavesTombstone"`
@@ -121,7 +121,7 @@ type Task struct {
 	Experimental *BlobValue `json:"experimental"`
 	Repeater     *BlobValue `json:"repeater"`
 
-	// Обогащённые поля
+	// Enriched fields
 	TypeName     *string         `json:"typeName"`
 	StatusName   *string         `json:"statusName"`
 	AreaTitle    *string         `json:"areaTitle,omitempty"`
@@ -132,7 +132,7 @@ type Task struct {
 	Checklist    []ChecklistItem `json:"checklist,omitempty"`
 }
 
-// ChecklistItem — TMChecklistItem.
+// ChecklistItem is the domain model of TMChecklistItem.
 type ChecklistItem struct {
 	UUID                 string     `json:"uuid"`
 	UserModificationDate *string    `json:"userModificationDate"`
@@ -147,7 +147,7 @@ type ChecklistItem struct {
 	StatusName           *string    `json:"statusName"`
 }
 
-// Contact — TMContact.
+// Contact is the domain model of TMContact.
 type Contact struct {
 	UUID               string  `json:"uuid"`
 	DisplayName        *string `json:"displayName"`
@@ -158,44 +158,44 @@ type Contact struct {
 	Index              *int64  `json:"index"`
 }
 
-// Tombstone — TMTombstone.
+// Tombstone is the domain model of TMTombstone.
 type Tombstone struct {
 	UUID              string  `json:"uuid"`
 	DeletionDate      *string `json:"deletionDate"`
 	DeletedObjectUUID *string `json:"deletedObjectUUID"`
 }
 
-// TagRef — компактная ссылка на тег при обогащении задач/областей.
+// TagRef is a compact reference to a tag used when enriching tasks/areas.
 type TagRef struct {
 	UUID  string  `json:"uuid"`
 	Title *string `json:"title"`
 }
 
-// Links — пары многие-ко-многим как они есть в БД.
+// Links holds the many-to-many pairs as they are in the DB.
 type Links struct {
 	TaskTag []TaskTagLink `json:"taskTag"`
 	AreaTag []AreaTagLink `json:"areaTag"`
 }
 
-// TaskTagLink — одна пара TMTaskTag.
+// TaskTagLink is a single TMTaskTag pair.
 type TaskTagLink struct {
 	Task string `json:"task"`
 	Tag  string `json:"tag"`
 }
 
-// AreaTagLink — одна пара TMAreaTag.
+// AreaTagLink is a single TMAreaTag pair.
 type AreaTagLink struct {
 	Area string `json:"area"`
 	Tag  string `json:"tag"`
 }
 
-// Hierarchy — иерархический срез для пресета all.
+// Hierarchy is the hierarchical view for the "all" preset.
 type Hierarchy struct {
 	Areas              []HierarchyArea `json:"areas"`
 	InboxOrOrphanTasks []HierarchyItem `json:"inbox_or_orphan_tasks"`
 }
 
-// HierarchyArea — область с её корневыми задачами/проектами.
+// HierarchyArea is an area with its root tasks/projects.
 type HierarchyArea struct {
 	UUID    string          `json:"uuid"`
 	Title   *string         `json:"title"`
@@ -205,7 +205,7 @@ type HierarchyArea struct {
 	Items   []HierarchyItem `json:"items"`
 }
 
-// HierarchyItem — компактная карточка задачи/проекта внутри иерархии.
+// HierarchyItem is a compact card of a task/project within the hierarchy.
 type HierarchyItem struct {
 	UUID       string  `json:"uuid"`
 	Title      *string `json:"title"`

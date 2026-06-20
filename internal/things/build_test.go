@@ -14,7 +14,7 @@ func sampleRaw() things.RawData {
 		Areas: []things.RawArea{
 			{UUID: "A-work", Title: ptrString("Work"), Index: ptrInt64(-100)},
 			{UUID: "A-home", Title: ptrString("Home"), Index: ptrInt64(50)},
-			{UUID: "A-nil", Title: ptrString("Misc")}, // Index=nil — должен пойти в конец
+			{UUID: "A-nil", Title: ptrString("Misc")}, // Index=nil — should go last
 		},
 		Tags: []things.RawTag{
 			{UUID: "T-p1", Title: ptrString("P1")},
@@ -22,19 +22,19 @@ func sampleRaw() things.RawData {
 			{UUID: "T-work", Title: ptrString("work")},
 		},
 		Tasks: []things.RawTask{
-			// task в области Work, не trashed, todo, open
+			// task in the Work area, not trashed, todo, open
 			{UUID: "task-1", Title: ptrString("buy milk"), Area: ptrString("A-work"),
 				Type: ptrInt64(0), Status: ptrInt64(0), Index: ptrInt64(10)},
-			// trashed — не попадёт в hierarchy
+			// trashed — will not appear in the hierarchy
 			{UUID: "task-trashed", Title: ptrString("garbage"), Area: ptrString("A-work"),
 				Type: ptrInt64(0), Status: ptrInt64(3), Trashed: ptrInt64(1)},
-			// project (тип 1) в области Home
+			// project (type 1) in the Home area
 			{UUID: "proj-1", Title: ptrString("Build deck"), Area: ptrString("A-home"),
 				Type: ptrInt64(1), Status: ptrInt64(0), Index: ptrInt64(5)},
 			// inbox/orphan
 			{UUID: "task-inbox", Title: ptrString("call dentist"),
 				Type: ptrInt64(0), Status: ptrInt64(0), Index: ptrInt64(1)},
-			// task внутри проекта — НЕ должен попасть в hierarchy.items
+			// task inside a project — must NOT appear in hierarchy.items
 			{UUID: "task-in-proj", Title: ptrString("buy wood"), Project: ptrString("proj-1"),
 				Type: ptrInt64(0), Status: ptrInt64(0)},
 		},

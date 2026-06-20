@@ -11,8 +11,8 @@ import (
 	"pgregory.net/rapid"
 )
 
-// PropCoreDataRoundTrip — CP-2: для любого валидного Unix-timestamp в диапазоне
-// [Core Data epoch, 2100-01-01], парсинг результата CoreDataToISO даёт исходные секунды.
+// PropCoreDataRoundTrip — CP-2: for any valid Unix timestamp in the range
+// [Core Data epoch, 2100-01-01], parsing the result of CoreDataToISO yields the original seconds.
 func PropCoreDataRoundTrip(t *rapid.T) {
 	unixSec := rapid.Int64Range(978307200, 4102444800).Draw(t, "unixSec")
 	coreSec := float64(unixSec - 978307200)
@@ -29,7 +29,7 @@ func TestPropCoreDataRoundTrip(t *testing.T) {
 	rapid.Check(t, PropCoreDataRoundTrip)
 }
 
-// PropPackedDateValid — CP-3: для любых валидных (year, month, day),
+// PropPackedDateValid — CP-3: for any valid (year, month, day),
 // PackedDateToISO(pack(y,m,d)) == sprintf("%04d-%02d-%02d", y, m, d).
 func PropPackedDateValid(t *rapid.T) {
 	year := rapid.IntRange(1970, 2100).Draw(t, "year")
@@ -46,7 +46,7 @@ func TestPropPackedDateValid(t *testing.T) {
 	rapid.Check(t, PropPackedDateValid)
 }
 
-// PropEnumTotality — CP-5: известный код → имя; неизвестный код → nil.
+// PropEnumTotality — CP-5: known code → name; unknown code → nil.
 func PropEnumTotality(t *rapid.T) {
 	// Random code in extended range, then check based on which set it falls into.
 	code := rapid.Int64Range(-100, 100).Draw(t, "code")
@@ -64,7 +64,7 @@ func TestPropEnumTotality(t *testing.T) {
 	rapid.Check(t, PropEnumTotality)
 }
 
-// PropBlobEncoding — CP-6: drop ⇒ nil; пустой ⇒ nil; иначе ⇒ hex.EncodeToString.
+// PropBlobEncoding — CP-6: drop ⇒ nil; empty ⇒ nil; otherwise ⇒ hex.EncodeToString.
 func PropBlobEncoding(t *rapid.T) {
 	b := rapid.SliceOfN(rapid.Byte(), 0, 256).Draw(t, "b")
 	drop := rapid.Bool().Draw(t, "drop")

@@ -6,12 +6,12 @@ import (
 	"time"
 )
 
-// coreDataEpochUnix — секунды от Unix epoch до Core Data epoch (2001-01-01 UTC).
+// coreDataEpochUnix is the number of seconds from the Unix epoch to the Core Data epoch (2001-01-01 UTC).
 const coreDataEpochUnix = int64(978307200)
 
-// CoreDataToISO конвертирует Core Data timestamp (вещественное число секунд от 2001-01-01 UTC)
-// в строку ISO 8601 UTC с микросекундной точностью.
-// Возвращает nil для nil-входа, NaN и Inf.
+// CoreDataToISO converts a Core Data timestamp (a floating-point number of seconds since 2001-01-01 UTC)
+// into an ISO 8601 UTC string with microsecond precision.
+// Returns nil for nil input, NaN, and Inf.
 func CoreDataToISO(v *float64) *string {
 	if v == nil {
 		return nil
@@ -31,10 +31,10 @@ func CoreDataToISO(v *float64) *string {
 	return &s
 }
 
-// PackedDateToISO декодирует packed-дату Things 3 (битовая раскладка
-// (year<<16) | (month<<12) | (day<<7)) в строку "YYYY-MM-DD".
-// Возвращает nil для nil, 0 и любых значений, у которых декодированные
-// year/month/day выходят за валидные диапазоны.
+// PackedDateToISO decodes a Things 3 packed date (bit layout
+// (year<<16) | (month<<12) | (day<<7)) into a "YYYY-MM-DD" string.
+// Returns nil for nil, 0, and any values whose decoded
+// year/month/day fall outside valid ranges.
 func PackedDateToISO(v *int64) *string {
 	if v == nil || *v == 0 {
 		return nil

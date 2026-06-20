@@ -1,8 +1,8 @@
 # thingsexporter
 
-CLI-утилита на Go для экспорта локальной БД macOS-приложения [Things 3](https://culturedcode.com/things/) в JSON или Markdown. Читает `main.sqlite` строго в read-only, не зависит от Python, единый статический бинарь без CGO.
+A Go CLI utility for exporting the local database of the macOS app [Things 3](https://culturedcode.com/things/) to JSON or Markdown. It reads `main.sqlite` strictly in read-only mode, has no Python dependency, and ships as a single static binary without CGO.
 
-## Установка
+## Installation
 
 ### Homebrew (macOS / Linux)
 
@@ -16,7 +16,7 @@ brew install jtprogru/tap/thingsexporter
 go install github.com/jtprogru/thingsexporter/cmd/thingsexporter@latest
 ```
 
-### Из исходников
+### From source
 
 ```sh
 git clone https://github.com/jtprogru/thingsexporter
@@ -24,17 +24,17 @@ cd thingsexporter
 task build     # → bin/thingsexporter
 ```
 
-## Использование
+## Usage
 
-### Дефолт — полный JSON в stdout
+### Default — full JSON to stdout
 
-На macOS путь к БД определяется автоматически:
+On macOS the database path is detected automatically:
 
 ```sh
 thingsexporter > things.json
 ```
 
-На Linux/Windows (или если БД лежит в нестандартном месте):
+On Linux/Windows (or if the database is in a non-standard location):
 
 ```sh
 thingsexporter --db /path/to/main.sqlite > things.json
@@ -46,58 +46,58 @@ thingsexporter --db /path/to/main.sqlite > things.json
 thingsexporter --format markdown --out tasks.md
 ```
 
-Вывод — иерархия `# Inbox` → `# Areas → ## <area> → ### <project>` с GFM-чекбоксами `[ ]` / `[x]` / `[-]` (canceled), inline-тегами `#tag` и дедлайнами `⏰ YYYY-MM-DD`.
+The output is a hierarchy `# Inbox` → `# Areas → ## <area> → ### <project>` with GFM checkboxes `[ ]` / `[x]` / `[-]` (canceled), inline `#tag` tags, and deadlines `⏰ YYYY-MM-DD`.
 
-### Подмножество данных
+### Subset of data
 
 ```sh
-# только задачи без связей
+# tasks only, without relations
 thingsexporter --include tasks
 
-# задачи + теги
+# tasks + tags
 thingsexporter --include tasks+tags
 
-# задачи + области, проекты, заголовки
+# tasks + areas, projects, headings
 thingsexporter --include tasks+projects
 
-# оглавление — области, теги и иерархия без тел задач
+# table of contents — areas, tags and hierarchy without task bodies
 thingsexporter --include structure
 
-# всё (default)
+# everything (default)
 thingsexporter --include all
 ```
 
-### Полезные флаги
+### Useful flags
 
 ```
---db <path>          путь к main.sqlite (default: auto-discover на macOS)
---out <path|->       выходной файл, '-' = stdout (default: -)
---format json|markdown   формат вывода (default: json)
---include <preset>   состав: all|structure|tasks|tasks+tags|tasks+projects (default: all)
---indent <int>       отступ JSON, 0 = компактный (default: 2)
---no-blobs           не выводить BLOB-поля (по умолчанию они идут как hex)
---quiet              подавить сводку в stderr
+--db <path>          path to main.sqlite (default: auto-discover on macOS)
+--out <path|->       output file, '-' = stdout (default: -)
+--format json|markdown   output format (default: json)
+--include <preset>   contents: all|structure|tasks|tasks+tags|tasks+projects (default: all)
+--indent <int>       JSON indentation, 0 = compact (default: 2)
+--no-blobs           do not output BLOB fields (by default they are emitted as hex)
+--quiet              suppress the summary on stderr
 ```
 
-### Подкоманды
+### Subcommands
 
 ```sh
-thingsexporter inspect              # счётчики и databaseVersion без выгрузки
-thingsexporter version              # версия + commit + дата сборки
-thingsexporter completion bash      # shell-completion для bash/zsh/fish/powershell
+thingsexporter inspect              # counters and databaseVersion without exporting
+thingsexporter version              # version + commit + build date
+thingsexporter completion bash      # shell completion for bash/zsh/fish/powershell
 ```
 
-## Поддерживаемая версия БД
+## Supported database version
 
-На момент релиза поддерживается `databaseVersion = 26`. Если открыть БД другой версии — утилита выдаст warning в stderr, но продолжит экспорт. Сообщайте о новых версиях в issues.
+As of this release, `databaseVersion = 26` is supported. If you open a database of a different version, the utility prints a warning to stderr but continues the export. Please report new versions in the issues.
 
-## Эксплуатация
+## Operation
 
-- БД всегда открывается строго в read-only (`mode=ro`), поэтому утилита безопасна для запуска при работающем Things 3.
-- Никакие данные никуда не отправляются — обработка только локальная.
-- BLOB-поля (`cachedTags`, `experimental`, `recurrenceRule`) по умолчанию сериализуются как `{"__blob_hex__": "<hex>"}`. Парсинг плистов/правил повтора — вне MVP.
-- Trashed-задачи попадают в коллекцию `tasks`, но исключаются из `hierarchy` (как в референсном Python-скрипте).
+- The database is always opened strictly in read-only mode (`mode=ro`), so the utility is safe to run while Things 3 is running.
+- No data is sent anywhere — all processing is local.
+- BLOB fields (`cachedTags`, `experimental`, `recurrenceRule`) are serialized as `{"__blob_hex__": "<hex>"}` by default. Parsing plists/recurrence rules is out of scope for the MVP.
+- Trashed tasks are included in the `tasks` collection but excluded from the `hierarchy` (as in the reference Python script).
 
-## Лицензия
+## License
 
 [MIT](./LICENSE) © Mikhail Savin

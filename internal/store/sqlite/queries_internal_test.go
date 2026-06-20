@@ -5,10 +5,10 @@ import (
 	"testing"
 )
 
-// TestQueriesQuoteReservedWords (CP-17): все упоминания SQL-reserved слов,
-// которые используются как идентификаторы столбцов в наших SELECT-ах, должны
-// быть обёрнуты в `"`. Поведенческое покрытие даёт TestRepositoryReadAll_fixture,
-// этот тест — статический guard против регрессий при правке SQL.
+// TestQueriesQuoteReservedWords (CP-17): every occurrence of a SQL reserved word
+// used as a column identifier in our SELECTs must be wrapped in `"`. Behavioral
+// coverage is provided by TestRepositoryReadAll_fixture; this test is a static
+// guard against regressions when editing the SQL.
 func TestQueriesQuoteReservedWords(t *testing.T) {
 	t.Parallel()
 	queries := map[string]string{
