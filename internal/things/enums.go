@@ -17,18 +17,18 @@ var (
 	}
 )
 
-// TaskTypeName маппит код типа задачи в человекочитаемое имя.
-// Возвращает nil для nil-входа и неизвестного кода.
+// TaskTypeName maps a task type code to a human-readable name.
+// Returns nil for nil input and unknown codes.
 func TaskTypeName(code *int64) *string {
 	return lookupEnum(code, taskTypes)
 }
 
-// TaskStatusName маппит код статуса задачи в человекочитаемое имя.
+// TaskStatusName maps a task status code to a human-readable name.
 func TaskStatusName(code *int64) *string {
 	return lookupEnum(code, taskStatuses)
 }
 
-// ChecklistStatusName маппит код статуса checklist-айтема в имя.
+// ChecklistStatusName maps a checklist item status code to a name.
 func ChecklistStatusName(code *int64) *string {
 	return lookupEnum(code, checklistStatuses)
 }

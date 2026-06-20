@@ -33,7 +33,7 @@ func TestRepositoryReadAll_fixture(t *testing.T) {
 	require.Len(t, raw.AreaTagPairs, 1)
 	require.NotEmpty(t, raw.MetaRows)
 
-	// Спот-проверки полей
+	// Spot-checks of fields
 	var task1 *struct{ trashed *int64 }
 	for _, t := range raw.Tasks {
 		if t.UUID == "task-trashed" {

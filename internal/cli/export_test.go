@@ -92,7 +92,7 @@ func TestExportCmd_outToFile(t *testing.T) {
 	require.NoError(t, runCmd(t, deps, "--out", outFile))
 	body, err := os.ReadFile(outFile)
 	require.NoError(t, err)
-	// файл-вывод с дефолтным indent=2, потому "schema": "...".
+	// file output uses the default indent=2, hence "schema": "...".
 	require.Contains(t, string(body), `"schema": "thingsexporter/v1"`)
 }
 
@@ -101,7 +101,7 @@ func TestExportCmd_indentZero_compact(t *testing.T) {
 	deps, stdout, _ := newTestDeps(t)
 	require.NoError(t, runCmd(t, deps, "--indent", "0"))
 	s := stdout.String()
-	// При indent=0 — нет внутренних переносов; единственный \n — финальный.
+	// With indent=0 there are no internal newlines; the only \n is the final one.
 	require.Equal(t, 1, strings.Count(s, "\n"))
 }
 
@@ -109,7 +109,7 @@ func TestExportCmd_noBlobs(t *testing.T) {
 	t.Parallel()
 	deps, stdout, _ := newTestDeps(t)
 	require.NoError(t, runCmd(t, deps, "--no-blobs"))
-	// у нас фикстура без непустых BLOB, поэтому проверяем, что в выводе нет __blob_hex__
+	// our fixture has no non-empty BLOBs, so we check that the output has no __blob_hex__
 	require.NotContains(t, stdout.String(), "__blob_hex__")
 }
 

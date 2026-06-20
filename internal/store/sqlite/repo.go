@@ -7,15 +7,15 @@ import (
 	"github.com/jtprogru/thingsexporter/internal/things"
 )
 
-// Repository обёртка над *sql.DB с типизированными методами чтения Things 3.
+// Repository wraps *sql.DB with typed methods for reading Things 3 data.
 type Repository struct {
 	db *sql.DB
 }
 
-// NewRepository — конструктор. Сам *sql.DB обычно создан Open().
+// NewRepository is the constructor. The *sql.DB itself is usually created by Open().
 func NewRepository(db *sql.DB) *Repository { return &Repository{db: db} }
 
-// ReadAll вычитывает все таблицы в RawData. Не делает никаких преобразований.
+// ReadAll reads all tables into RawData. It performs no transformations.
 func (r *Repository) ReadAll(ctx context.Context) (things.RawData, error) {
 	var out things.RawData
 	var err error
@@ -49,15 +49,15 @@ func (r *Repository) ReadAll(ctx context.Context) (things.RawData, error) {
 	return out, nil
 }
 
-// ReadCounts возвращает только COUNT(*) по каждой таблице.
+// ReadCounts returns only COUNT(*) for each table.
 func (r *Repository) ReadCounts(ctx context.Context) (things.Counts, error) {
 	return selectCounts(ctx, r.db)
 }
 
-// DatabaseVersion возвращает значение databaseVersion из таблицы Meta.
+// DatabaseVersion returns the databaseVersion value from the Meta table.
 func (r *Repository) DatabaseVersion(ctx context.Context) (*int, error) {
 	return selectDatabaseVersion(ctx, r.db)
 }
 
-// Close закрывает underlying *sql.DB.
+// Close closes the underlying *sql.DB.
 func (r *Repository) Close() error { return r.db.Close() }

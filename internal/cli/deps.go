@@ -1,4 +1,4 @@
-// Package cli — обёртка над cobra, образующая команды thingsexporter.
+// Package cli is a thin wrapper over cobra that builds the thingsexporter commands.
 package cli
 
 import (
@@ -14,8 +14,8 @@ import (
 	sqlitestore "github.com/jtprogru/thingsexporter/internal/store/sqlite"
 )
 
-// Deps — явный test seam. Прод запускает DefaultDeps(); в тестах
-// поля подменяются на буферы и фейки.
+// Deps is an explicit test seam. Production runs DefaultDeps(); in tests
+// the fields are swapped for buffers and fakes.
 type Deps struct {
 	Stdout, Stderr io.Writer
 	Clock          func() time.Time
@@ -26,12 +26,12 @@ type Deps struct {
 	Writers *export.Registry
 	Presets *preset.Registry
 
-	// SupportedDBVersions — допустимые значения databaseVersion;
-	// если фактическое не в списке — печатается warning.
+	// SupportedDBVersions lists the accepted databaseVersion values;
+	// if the actual value is not in the list, a warning is printed.
 	SupportedDBVersions []int
 }
 
-// DefaultDeps собирает рабочие зависимости для main-процесса.
+// DefaultDeps assembles the working dependencies for the main process.
 func DefaultDeps() Deps {
 	writers := export.NewRegistry(jsonwriter.Writer{}, mdwriter.Writer{})
 	presets := preset.NewRegistry(preset.All{}, preset.Structure{}, preset.Tasks{}, preset.TasksTags{}, preset.TasksProjects{})

@@ -403,7 +403,7 @@ func selectDatabaseVersion(ctx context.Context, db *sql.DB) (*int, error) {
 	}
 	m := dbVersionRe.FindStringSubmatch(raw.String)
 	if len(m) != 2 {
-		// Может быть просто число "26" без plist.
+		// It may be just a plain number like "26" without a plist.
 		if v, err := strconv.Atoi(raw.String); err == nil {
 			return &v, nil
 		}

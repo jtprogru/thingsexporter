@@ -94,7 +94,7 @@ func TestPresetTasksTags_strips(t *testing.T) {
 	require.Nil(t, out.Hierarchy)
 	require.Len(t, out.Tags, 1)
 	require.Len(t, out.Tasks, 1)
-	require.NotNil(t, out.Tasks[0].Tags) // оставлены!
+	require.NotNil(t, out.Tasks[0].Tags) // kept!
 	require.Nil(t, out.Tasks[0].Checklist)
 	require.Nil(t, out.Tasks[0].AreaTitle)
 	require.NotNil(t, out.Meta.Counts.Tasks)

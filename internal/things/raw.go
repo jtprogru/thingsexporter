@@ -1,7 +1,7 @@
 package things
 
-// RawData — результат чтения БД ДО конвертации дат/enum/BLOB.
-// Storage-слой заполняет RawData, Build потребляет его и возвращает Export.
+// RawData is the result of reading the DB BEFORE date/enum/BLOB conversion.
+// The storage layer fills RawData, and Build consumes it and returns an Export.
 type RawData struct {
 	Areas        []RawArea
 	Tags         []RawTag
@@ -14,7 +14,7 @@ type RawData struct {
 	MetaRows     []MetaRow
 }
 
-// RawArea — сырая строка TMArea.
+// RawArea is a raw TMArea row.
 type RawArea struct {
 	UUID         string
 	Title        *string
@@ -24,7 +24,7 @@ type RawArea struct {
 	Experimental []byte
 }
 
-// RawTag — сырая строка TMTag.
+// RawTag is a raw TMTag row.
 type RawTag struct {
 	UUID         string
 	Title        *string
@@ -35,7 +35,7 @@ type RawTag struct {
 	Experimental []byte
 }
 
-// RawTask — сырая строка TMTask.
+// RawTask is a raw TMTask row.
 type RawTask struct {
 	UUID                        string
 	LeavesTombstone             *int64
@@ -83,7 +83,7 @@ type RawTask struct {
 	Repeater     []byte
 }
 
-// RawChecklist — сырая строка TMChecklistItem.
+// RawChecklist is a raw TMChecklistItem row.
 type RawChecklist struct {
 	UUID                 string
 	UserModificationDate *float64
@@ -97,7 +97,7 @@ type RawChecklist struct {
 	Experimental         []byte
 }
 
-// RawContact — сырая строка TMContact.
+// RawContact is a raw TMContact row.
 type RawContact struct {
 	UUID               string
 	DisplayName        *string
@@ -108,7 +108,7 @@ type RawContact struct {
 	Index              *int64
 }
 
-// RawTombstone — сырая строка TMTombstone.
+// RawTombstone is a raw TMTombstone row.
 type RawTombstone struct {
 	UUID              string
 	DeletionDate      *float64

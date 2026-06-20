@@ -1,4 +1,4 @@
-// Package json реализует JSON-форматтер для Export.
+// Package json implements a JSON formatter for Export.
 package json
 
 import (
@@ -10,16 +10,16 @@ import (
 	"github.com/jtprogru/thingsexporter/internal/things"
 )
 
-// Writer — реализация export.Writer для JSON.
+// Writer is the export.Writer implementation for JSON.
 type Writer struct{}
 
-// Format возвращает имя формата.
+// Format returns the format name.
 func (Writer) Format() string { return "json" }
 
-// Write сериализует Export в out как UTF-8 JSON.
-// При opts.Indent > 0 — pretty-print с указанным количеством пробелов.
-// При opts.Indent == 0 — компактный (через encjson.Encoder без SetIndent).
-// HTML-escape отключён, чтобы кириллица/эмодзи не превращались в \uXXXX.
+// Write serializes Export to out as UTF-8 JSON.
+// When opts.Indent > 0 it pretty-prints with the given number of spaces.
+// When opts.Indent == 0 it produces compact output (via encjson.Encoder without SetIndent).
+// HTML escaping is disabled so that Cyrillic/emoji are not turned into \uXXXX.
 func (Writer) Write(out io.Writer, data things.Export, opts export.Options) error {
 	enc := encjson.NewEncoder(out)
 	enc.SetEscapeHTML(false)

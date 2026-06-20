@@ -1,4 +1,4 @@
-// Command thingsexporter — CLI для экспорта БД Things 3 в JSON или Markdown.
+// Command thingsexporter is a CLI for exporting the Things 3 database to JSON or Markdown.
 package main
 
 import (

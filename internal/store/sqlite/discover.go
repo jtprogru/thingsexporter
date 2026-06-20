@@ -1,15 +1,15 @@
-// Package sqlite реализует чтение Things 3 SQLite БД в режиме read-only
-// и авто-определение её стандартного пути на macOS.
+// Package sqlite implements read-only access to the Things 3 SQLite database
+// and auto-detection of its standard path on macOS.
 package sqlite
 
 import "path/filepath"
 
-// DefaultMacOSDBPath — относительный (от $HOME) путь к Things 3 БД на macOS.
+// DefaultMacOSDBPath is the path to the Things 3 database on macOS, relative to $HOME.
 const DefaultMacOSDBPath = "Library/Group Containers/JLMPQHK86H.com.culturedcode.ThingsMac/Things Database.thingsdatabase/main.sqlite"
 
-// Discover пытается найти Things 3 БД в стандартном месте.
-// Возвращает абсолютный путь и true, если ОС — darwin, home непуст и файл существует
-// (проверка статусом через statFn).
+// Discover attempts to find the Things 3 database in its standard location.
+// It returns the absolute path and true if the OS is darwin, home is non-empty,
+// and the file exists (checked via statFn).
 func Discover(home, goos string, statFn func(string) error) (string, bool) {
 	if home == "" || goos != "darwin" {
 		return "", false

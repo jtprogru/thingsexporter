@@ -2,14 +2,14 @@ package things
 
 import "encoding/hex"
 
-// BlobValue представляет BLOB-поле в JSON-выводе: {"__blob_hex__":"<lowercase-hex>"}.
-// Указатель nil в коде сериализуется как JSON null.
+// BlobValue represents a BLOB field in the JSON output: {"__blob_hex__":"<lowercase-hex>"}.
+// A nil pointer in code is serialized as JSON null.
 type BlobValue struct {
 	Hex *string `json:"__blob_hex__,omitempty"`
 }
 
-// EncodeBlob кодирует сырые байты BLOB-колонки в *BlobValue.
-// Возвращает nil если b пуст, либо если drop == true.
+// EncodeBlob encodes the raw bytes of a BLOB column into a *BlobValue.
+// Returns nil if b is empty, or if drop == true.
 func EncodeBlob(b []byte, drop bool) *BlobValue {
 	if drop || len(b) == 0 {
 		return nil
