@@ -11,3 +11,4 @@ testdata/rapid/**/*.fail
 /pipeline.sh
 .claude/
 .serena/
+.spec/
