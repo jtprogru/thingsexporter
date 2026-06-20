@@ -1,4 +1,4 @@
-// Package markdown реализует Markdown-форматтер для Export.
+// Package markdown implements a Markdown formatter for Export.
 package markdown
 
 import (
@@ -11,14 +11,14 @@ import (
 	"github.com/jtprogru/thingsexporter/internal/things"
 )
 
-// Writer — реализация export.Writer для Markdown.
+// Writer is the export.Writer implementation for Markdown.
 type Writer struct{}
 
-// Format возвращает имя формата.
+// Format returns the format name.
 func (Writer) Format() string { return "markdown" }
 
-// Write рендерит Export как иерархию `# Inbox` + `# Areas → ## Area → ### Project → задачи`.
-// При отсутствии Hierarchy (пресеты без иерархии) — плоский список задач.
+// Write renders Export as a hierarchy `# Inbox` + `# Areas → ## Area → ### Project → tasks`.
+// When there is no Hierarchy (presets without a hierarchy) it produces a flat list of tasks.
 func (Writer) Write(out io.Writer, data things.Export, _ export.Options) error {
 	w := bufio.NewWriter(out)
 	defer func() { _ = w.Flush() }()
@@ -45,7 +45,7 @@ func (Writer) Write(out io.Writer, data things.Export, _ export.Options) error {
 		return w.Flush()
 	}
 
-	// Плоский режим: просто список задач.
+	// Flat mode: just a list of tasks.
 	for _, t := range data.Tasks {
 		writeTaskLine(w, t)
 	}
@@ -79,7 +79,7 @@ func writeAreas(w *bufio.Writer, areas []things.HierarchyArea, tasksByUUID map[s
 				writeHierarchyItem(w, it)
 				continue
 			}
-			// Проект — рендерим как ### и его задачи
+			// Project — render as ### with its tasks
 			if t.TypeName != nil && *t.TypeName == "project" {
 				_, _ = w.WriteString("### " + stringOr(t.Title, "(untitled)") + "\n\n")
 				for _, child := range tasksByProject[t.UUID] {

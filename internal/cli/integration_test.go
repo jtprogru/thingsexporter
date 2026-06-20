@@ -8,8 +8,8 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-// TestIntegration_jsonExport_fixture — REQ-8.2: полный JSON-экспорт фикстуры
-// возвращает осмысленные счётчики и поля.
+// TestIntegration_jsonExport_fixture — REQ-8.2: a full JSON export of the fixture
+// returns meaningful counts and fields.
 func TestIntegration_jsonExport_fixture(t *testing.T) {
 	t.Parallel()
 	deps, stdout, _ := newTestDeps(t)
@@ -41,8 +41,8 @@ func TestIntegration_jsonExport_fixture(t *testing.T) {
 	require.Len(t, payload.Hierarchy.InboxOrOrphanTasks, 1)
 }
 
-// TestIntegration_structureExport_fixture — пресет structure: areas + tags +
-// hierarchy, без коллекции tasks и счётчика tasks в meta.counts.
+// TestIntegration_structureExport_fixture — structure preset: areas + tags +
+// hierarchy, without the tasks collection and without the tasks count in meta.counts.
 func TestIntegration_structureExport_fixture(t *testing.T) {
 	t.Parallel()
 	deps, stdout, _ := newTestDeps(t)
@@ -76,8 +76,8 @@ func TestIntegration_structureExport_fixture(t *testing.T) {
 	require.False(t, hasTasksCount, "structure preset must omit Counts.Tasks")
 }
 
-// TestIntegration_markdownExport_fixture — REQ-8.3: Markdown содержит
-// иерархические заголовки.
+// TestIntegration_markdownExport_fixture — REQ-8.3: Markdown contains
+// hierarchical headings.
 func TestIntegration_markdownExport_fixture(t *testing.T) {
 	t.Parallel()
 	deps, stdout, _ := newTestDeps(t)
@@ -88,6 +88,6 @@ func TestIntegration_markdownExport_fixture(t *testing.T) {
 	require.Contains(t, s, "## Work")
 	require.Contains(t, s, "## Home")
 	require.Contains(t, s, "### Build deck")
-	// hierarchy уже сортирует Areas по Index — Work (-100) идёт первым
+	// hierarchy already sorts Areas by Index — Work (-100) comes first
 	require.Less(t, strings.Index(s, "## Work"), strings.Index(s, "## Home"))
 }

@@ -166,8 +166,8 @@ INSERT INTO "TMAreaTag" ("areas","tags") VALUES
   ('A-work','T-p1');
 `
 
-// buildFixture создаёт временный SQLite-файл со схемой Things 3 и
-// контролируемым набором данных. Возвращает путь к файлу.
+// buildFixture creates a temporary SQLite file with the Things 3 schema and a
+// controlled set of data. It returns the path to the file.
 func buildFixture(t testing.TB) string {
 	t.Helper()
 	path := filepath.Join(t.TempDir(), "things.sqlite")

@@ -1,4 +1,4 @@
-// Package preset реализует фильтр Export по пресету состава (--include).
+// Package preset implements Export filtering by a content preset (--include).
 package preset
 
 import (
@@ -9,18 +9,18 @@ import (
 	"github.com/jtprogru/thingsexporter/internal/things"
 )
 
-// Preset — стратегия фильтрации Export.
+// Preset is a strategy for filtering Export.
 type Preset interface {
 	Name() string
 	Apply(in things.Export) things.Export
 }
 
-// Registry — реестр пресетов по имени.
+// Registry is a registry of presets by name.
 type Registry struct {
 	presets map[string]Preset
 }
 
-// NewRegistry создаёт реестр и регистрирует переданные пресеты.
+// NewRegistry creates a registry and registers the given presets.
 func NewRegistry(ps ...Preset) *Registry {
 	r := &Registry{presets: make(map[string]Preset, len(ps))}
 	for _, p := range ps {
@@ -29,10 +29,10 @@ func NewRegistry(ps ...Preset) *Registry {
 	return r
 }
 
-// Register добавляет пресет (перезаписывает существующий).
+// Register adds a preset (overwrites an existing one).
 func (r *Registry) Register(p Preset) { r.presets[p.Name()] = p }
 
-// Lookup возвращает пресет по имени.
+// Lookup returns the preset for the given name.
 func (r *Registry) Lookup(name string) (Preset, error) {
 	if p, ok := r.presets[name]; ok {
 		return p, nil
@@ -40,7 +40,7 @@ func (r *Registry) Lookup(name string) (Preset, error) {
 	return nil, fmt.Errorf("unknown include preset %q (supported: %s)", name, strings.Join(r.Names(), ", "))
 }
 
-// Names — алфавитно отсортированный список пресетов.
+// Names returns an alphabetically sorted list of presets.
 func (r *Registry) Names() []string {
 	out := make([]string, 0, len(r.presets))
 	for k := range r.presets {
@@ -50,13 +50,13 @@ func (r *Registry) Names() []string {
 	return out
 }
 
-// All — пресет "all": идентичный Export.
+// All is the "all" preset: an identical Export.
 type All struct{}
 
 func (All) Name() string                         { return "all" }
 func (All) Apply(in things.Export) things.Export { return in }
 
-// Tasks — пресет "tasks": только Tasks с enums/dates, без связей.
+// Tasks is the "tasks" preset: only Tasks with enums/dates, without relations.
 type Tasks struct{}
 
 func (Tasks) Name() string { return "tasks" }
@@ -83,7 +83,7 @@ func (Tasks) Apply(in things.Export) things.Export {
 	}
 }
 
-// TasksTags — пресет "tasks+tags": Tasks с tags + коллекция Tags.
+// TasksTags is the "tasks+tags" preset: Tasks with tags + the Tags collection.
 type TasksTags struct{}
 
 func (TasksTags) Name() string { return "tasks+tags" }
@@ -113,11 +113,11 @@ func (TasksTags) Apply(in things.Export) things.Export {
 	}
 }
 
-// Structure — пресет "structure": оглавление выгрузки.
-// Возвращает Areas + Tags + Hierarchy без коллекции Tasks и связанных
-// объектов (ChecklistItems, Contacts, Tombstones, Links). Полезно
-// для быстрого обзора организационной структуры базы Things 3
-// без выгрузки тел задач.
+// Structure is the "structure" preset: a table of contents for the export.
+// Returns Areas + Tags + Hierarchy without the Tasks collection and related
+// objects (ChecklistItems, Contacts, Tombstones, Links). Useful
+// for a quick overview of the organizational structure of the Things 3 database
+// without exporting the task bodies.
 type Structure struct{}
 
 func (Structure) Name() string { return "structure" }
@@ -139,7 +139,7 @@ func (Structure) Apply(in things.Export) things.Export {
 	}
 }
 
-// TasksProjects — пресет "tasks+projects": Tasks с *Title-полями + коллекция Areas.
+// TasksProjects is the "tasks+projects" preset: Tasks with *Title fields + the Areas collection.
 type TasksProjects struct{}
 
 func (TasksProjects) Name() string { return "tasks+projects" }

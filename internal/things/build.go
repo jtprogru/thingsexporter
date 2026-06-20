@@ -5,18 +5,18 @@ import (
 	"time"
 )
 
-// SchemaVersion фиксирует схему выгрузки. См. ADR-9.
+// SchemaVersion pins the export schema. See ADR-9.
 const SchemaVersion = "thingsexporter/v1"
 
-// BuildOptions — параметры сборки Export из RawData.
+// BuildOptions holds the parameters for assembling an Export from RawData.
 type BuildOptions struct {
 	Source     string
 	ExportedAt time.Time
 	NoBlobs    bool
 }
 
-// Build конвертирует RawData в полный Export (включая все коллекции, Links и Hierarchy).
-// Сокращение состава под пресет — задача пакета export/preset.
+// Build converts RawData into a full Export (including all collections, Links, and Hierarchy).
+// Narrowing the contents down to a preset is the job of the export/preset package.
 func Build(raw RawData, opts BuildOptions) Export {
 	areas := buildAreas(raw, opts.NoBlobs)
 	tags := buildTags(raw, opts.NoBlobs)
@@ -37,7 +37,7 @@ func Build(raw RawData, opts BuildOptions) Export {
 		contactByUUID[contacts[i].UUID] = &contacts[i]
 	}
 
-	// teги по задаче/области
+	// tags by task/area
 	tagsForTask := make(map[string][]string)
 	for _, p := range raw.TaskTagPairs {
 		tagsForTask[p.Task] = append(tagsForTask[p.Task], p.Tag)
@@ -47,7 +47,7 @@ func Build(raw RawData, opts BuildOptions) Export {
 		tagsForArea[p.Area] = append(tagsForArea[p.Area], p.Tag)
 	}
 
-	// чек-лист по задаче
+	// checklist by task
 	checklistForTask := make(map[string][]ChecklistItem)
 	for _, c := range checklist {
 		if c.Task == nil {
@@ -63,7 +63,7 @@ func Build(raw RawData, opts BuildOptions) Export {
 		checklistForTask[k] = items
 	}
 
-	// Resolve parentTitle для тегов.
+	// Resolve parentTitle for tags.
 	for i := range tags {
 		if tags[i].Parent == nil {
 			continue
@@ -73,12 +73,12 @@ func Build(raw RawData, opts BuildOptions) Export {
 		}
 	}
 
-	// Обогащаем области: список тегов.
+	// Enrich areas: list of tags.
 	for i := range areas {
 		areas[i].Tags = tagRefs(tagsForArea[areas[i].UUID], tagByUUID)
 	}
 
-	// Конвертация задач + обогащение titlесов/тегов/чек-листа.
+	// Convert tasks + enrich titles/tags/checklist.
 	tasks := make([]Task, 0, len(raw.Tasks))
 	for _, rt := range raw.Tasks {
 		t := convertTask(rt, opts.NoBlobs)
@@ -199,8 +199,8 @@ func buildChecklist(raw RawData, noBlobs bool) []ChecklistItem {
 func buildContacts(raw RawData) []Contact {
 	out := make([]Contact, 0, len(raw.Contacts))
 	for _, r := range raw.Contacts {
-		// Поля RawContact и Contact сейчас совпадают; используем явное
-		// type conversion, чтобы при будущем расхождении ловить ошибку компиляции.
+		// The fields of RawContact and Contact currently match; we use an explicit
+		// type conversion so that a future divergence triggers a compile error.
 		out = append(out, Contact(r))
 	}
 	return out
@@ -298,8 +298,8 @@ func findTaskTitle(uuid string, tasks []RawTask) *string {
 	return nil
 }
 
-// buildHierarchy формирует срез Areas → root items + inbox.
-// Включаются только не-trashed корневые задачи/проекты (project=nil, heading=nil).
+// buildHierarchy forms the Areas → root items + inbox view.
+// Only non-trashed root tasks/projects (project=nil, heading=nil) are included.
 func buildHierarchy(tasks []Task, areas []Area) Hierarchy {
 	areaOrder := make([]Area, len(areas))
 	copy(areaOrder, areas)
@@ -322,7 +322,7 @@ func buildHierarchy(tasks []Task, areas []Area) Hierarchy {
 		if t.TypeName == nil {
 			continue
 		}
-		// hierarchy включает только задачи и проекты (typeName ∈ {todo, project})
+		// hierarchy includes only tasks and projects (typeName ∈ {todo, project})
 		if *t.TypeName != "todo" && *t.TypeName != "project" {
 			continue
 		}
@@ -375,7 +375,7 @@ func buildHierarchy(tasks []Task, areas []Area) Hierarchy {
 	return Hierarchy{Areas: hierAreas, InboxOrOrphanTasks: inboxItems}
 }
 
-// indexLessNilLast — порядок сортировки: nil — в конец, иначе по возрастанию int64.
+// indexLessNilLast defines the sort order: nil goes last, otherwise ascending by int64.
 func indexLessNilLast(a, b *int64) bool {
 	switch {
 	case a == nil && b == nil:

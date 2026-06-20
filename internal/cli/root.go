@@ -6,9 +6,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// NewRootCmd собирает корневую команду thingsexporter с подкомандами.
-// При запуске без подкоманды поведение эквивалентно `thingsexporter export`
-// со всеми дефолтами.
+// NewRootCmd builds the thingsexporter root command with its subcommands.
+// When invoked without a subcommand, the behavior is equivalent to
+// `thingsexporter export` with all defaults.
 func NewRootCmd(deps Deps) *cobra.Command {
 	f := defaultExportFlags()
 	root := &cobra.Command{
@@ -31,7 +31,7 @@ func NewRootCmd(deps Deps) *cobra.Command {
 	return root
 }
 
-// Execute строит и запускает root-команду, печатает ошибку в Stderr.
+// Execute builds and runs the root command, printing any error to Stderr.
 func Execute(deps Deps) error {
 	root := NewRootCmd(deps)
 	err := root.Execute()

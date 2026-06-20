@@ -9,9 +9,9 @@ import (
 	"pgregory.net/rapid"
 )
 
-// genExport — генератор произвольного Export со случайным количеством areas/tags/tasks,
-// каждый task — со всеми обогащёнными полями (Tags/Checklist/*Title/ContactName),
-// чтобы preset.Apply имел что вырезать.
+// genExport is a generator of an arbitrary Export with a random number of areas/tags/tasks,
+// where each task has all enriched fields (Tags/Checklist/*Title/ContactName),
+// so that preset.Apply has something to strip.
 func genExport() *rapid.Generator[things.Export] {
 	return rapid.Custom(func(t *rapid.T) things.Export {
 		nAreas := rapid.IntRange(0, 4).Draw(t, "nAreas")
@@ -90,12 +90,12 @@ func maxInt(a, b int) int {
 	return b
 }
 
-// PropPresetExclusions (CP-11): для любого Export каждый пресет вырезает
-// ровно те поля, что заявлены в его контракте, и сохраняет ровно те, что заявлены.
+// PropPresetExclusions (CP-11): for any Export each preset strips
+// exactly the fields declared in its contract and keeps exactly those declared.
 func PropPresetExclusions(t *rapid.T) {
 	in := genExport().Draw(t, "in")
 
-	// All — identity по коллекциям.
+	// All — identity over collections.
 	all := preset.All{}.Apply(in)
 	if len(all.Areas) != len(in.Areas) || len(all.Tasks) != len(in.Tasks) ||
 		len(all.Tags) != len(in.Tags) {
@@ -105,7 +105,7 @@ func PropPresetExclusions(t *rapid.T) {
 		t.Fatalf("All preset must preserve Hierarchy and Links")
 	}
 
-	// Tasks — только Tasks; на каждой задаче — никаких enrich-полей.
+	// Tasks — only Tasks; no enrich fields on any task.
 	tasks := preset.Tasks{}.Apply(in)
 	if tasks.Areas != nil || tasks.Tags != nil || tasks.ChecklistItems != nil ||
 		tasks.Contacts != nil || tasks.Tombstones != nil ||
@@ -124,7 +124,7 @@ func PropPresetExclusions(t *rapid.T) {
 		}
 	}
 
-	// TasksTags — Tasks с Tags + коллекция Tags; всё остальное nil.
+	// TasksTags — Tasks with Tags + the Tags collection; everything else nil.
 	tt := preset.TasksTags{}.Apply(in)
 	if tt.Areas != nil || tt.ChecklistItems != nil || tt.Contacts != nil ||
 		tt.Tombstones != nil || tt.Links != nil || tt.Hierarchy != nil {
@@ -139,13 +139,13 @@ func PropPresetExclusions(t *rapid.T) {
 			tk.ContactName != nil {
 			t.Fatalf("TasksTags must strip non-tag enrich-fields on task[%d]", i)
 		}
-		// Tags должны сохраниться, если они были в исходном.
+		// Tags must be preserved if they were present in the input.
 		if len(in.Tasks[i].Tags) > 0 && tk.Tags == nil {
 			t.Fatalf("TasksTags must preserve task[%d].Tags", i)
 		}
 	}
 
-	// Structure — Areas + Tags + Hierarchy без Tasks и связанных коллекций.
+	// Structure — Areas + Tags + Hierarchy without Tasks and related collections.
 	st := preset.Structure{}.Apply(in)
 	if st.Tasks != nil || st.ChecklistItems != nil || st.Contacts != nil ||
 		st.Tombstones != nil || st.Links != nil {
@@ -170,7 +170,7 @@ func PropPresetExclusions(t *rapid.T) {
 		t.Fatalf("Structure Counts.Tags must equal len(Tags)")
 	}
 
-	// TasksProjects — Tasks с *Title + коллекция Areas; tags/checklist на задачах nil.
+	// TasksProjects — Tasks with *Title + the Areas collection; tags/checklist on tasks nil.
 	tp := preset.TasksProjects{}.Apply(in)
 	if tp.Tags != nil || tp.ChecklistItems != nil || tp.Contacts != nil ||
 		tp.Tombstones != nil || tp.Links != nil || tp.Hierarchy != nil {

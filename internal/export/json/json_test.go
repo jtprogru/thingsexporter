@@ -13,7 +13,7 @@ import (
 )
 
 func sampleExport() things.Export {
-	cyr := "Тест"
+	cyr := "Tëst✓"
 	return things.Export{
 		Schema: things.SchemaVersion,
 		Meta: things.Meta{
@@ -37,7 +37,7 @@ func TestJsonWriter_compact(t *testing.T) {
 	var buf bytes.Buffer
 	require.NoError(t, jsonwriter.Writer{}.Write(&buf, sampleExport(), export.Options{Indent: 0}))
 	s := buf.String()
-	// единственный '\n' — это терминатор Encoder.Encode
+	// the only '\n' is the Encoder.Encode terminator
 	require.Equal(t, 1, strings.Count(s, "\n"), "compact JSON must have only trailing newline")
 	require.False(t, strings.Contains(s, "  "), "compact JSON must not have double spaces")
 }
@@ -49,7 +49,7 @@ func TestJsonWriter_indent_two(t *testing.T) {
 	s := buf.String()
 	require.Contains(t, s, "\n  \"schema\":", "top-level keys must be indented 2 spaces")
 
-	// Парсится обратно
+	// Parses back
 	var back map[string]any
 	require.NoError(t, encjson.Unmarshal(buf.Bytes(), &back))
 	require.Equal(t, things.SchemaVersion, back["schema"])
@@ -59,5 +59,5 @@ func TestJsonWriter_noASCIIEscape(t *testing.T) {
 	t.Parallel()
 	var buf bytes.Buffer
 	require.NoError(t, jsonwriter.Writer{}.Write(&buf, sampleExport(), export.Options{Indent: 0}))
-	require.Contains(t, buf.String(), "Тест", "cyrillic must remain UTF-8, not \\u escaped")
+	require.Contains(t, buf.String(), "Tëst✓", "non-ASCII must remain UTF-8, not \\u escaped")
 }

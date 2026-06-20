@@ -72,7 +72,7 @@ func genRawData() *rapid.Generator[things.RawData] {
 			})
 		}
 
-		// task-tag pairs (each task — random subset of tags)
+		// task-tag pairs (each task — a random subset of tags)
 		var pairs []things.TaskTagLink
 		for i := 0; i < nTasks; i++ {
 			for j := 0; j < nTags; j++ {
@@ -114,7 +114,7 @@ func TestPropCountsMatchCollections(t *testing.T) {
 func PropTagsEnrichment(t *rapid.T) {
 	raw := genRawData().Draw(t, "raw")
 	e := things.Build(raw, things.BuildOptions{})
-	// для каждой задачи количество tag-refs == количество пар с её UUID
+	// for each task, the number of tag-refs == the number of pairs with its UUID
 	for _, task := range e.Tasks {
 		expected := 0
 		for _, p := range raw.TaskTagPairs {
@@ -160,7 +160,7 @@ func PropHierarchyOrdering(t *rapid.T) {
 	raw := genRawData().Draw(t, "raw")
 	e := things.Build(raw, things.BuildOptions{})
 	require.NotNil(t, e.Hierarchy)
-	// Areas: non-nil indexes отсортированы ASC, nil — в конце
+	// Areas: non-nil indexes are sorted ASC, nil — at the end
 	var lastIdx *int64
 	seenNil := false
 	for _, a := range e.Hierarchy.Areas {
@@ -168,7 +168,7 @@ func PropHierarchyOrdering(t *rapid.T) {
 			seenNil = true
 			continue
 		}
-		require.False(t, seenNil, "non-nil index after nil — wrong ordering")
+		require.False(t, seenNil, "non-nil index after nil - wrong ordering")
 		if lastIdx != nil {
 			require.LessOrEqual(t, *lastIdx, *a.Index)
 		}
@@ -183,7 +183,7 @@ func TestPropHierarchyOrdering(t *testing.T) {
 // PropNoBlobsPropagation — CP-18.
 func PropNoBlobsPropagation(t *rapid.T) {
 	raw := genRawData().Draw(t, "raw")
-	// Заполним BLOB-байтами все области и задачи.
+	// Fill all areas and tasks with BLOB bytes.
 	for i := range raw.Areas {
 		raw.Areas[i].CachedTags = []byte{0xab, 0xcd}
 		raw.Areas[i].Experimental = []byte{0x01}

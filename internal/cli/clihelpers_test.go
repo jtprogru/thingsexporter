@@ -19,8 +19,8 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-// fixtureDDL и fixtureSeed дублируем минимально, чтобы тесты cli
-// не зависели от internal-пакетов.
+// fixtureDDL and fixtureSeed are duplicated minimally so the cli tests
+// do not depend on internal packages.
 const fixtureDDL = `
 CREATE TABLE "Meta" ("key" TEXT PRIMARY KEY, "value" TEXT);
 CREATE TABLE "TMArea" ("uuid" TEXT PRIMARY KEY, "title" TEXT, "visible" INTEGER, "index" INTEGER, "cachedTags" BLOB, "experimental" BLOB);
@@ -114,7 +114,7 @@ func newTestDeps(t testing.TB) (cli.Deps, *bytes.Buffer, *bytes.Buffer) {
 	return deps, stdout, stderr
 }
 
-// runCmd запускает root-команду с заданными argv (без имени программы).
+// runCmd runs the root command with the given argv (without the program name).
 func runCmd(t testing.TB, deps cli.Deps, argv ...string) error {
 	t.Helper()
 	root := cli.NewRootCmd(deps)
