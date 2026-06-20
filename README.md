@@ -1,5 +1,7 @@
 # thingsexporter
 
+![thingsexporter — export your Things 3 database to JSON or Markdown](./docs/cover.png)
+
 A Go CLI utility for exporting the local database of the macOS app [Things 3](https://culturedcode.com/things/) to JSON or Markdown. It reads `main.sqlite` strictly in read-only mode, has no Python dependency, and ships as a single static binary without CGO.
 
 ## Installation
