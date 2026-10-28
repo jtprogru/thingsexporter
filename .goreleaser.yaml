@@ -108,7 +108,10 @@ homebrew_casks:
       name: goreleaserbot
       email: bot@goreleaser.com
     commit_msg_template: "chore(thingsexporter): bring cask to {{ .Tag }}"
-    custom_block: |
-      postflight_steps do
-        run "/usr/bin/xattr", args: ["-dr", "com.apple.quarantine", "{{ "{{staged_path}}" }}/thingsexporter"]
-      end
+    # Strip the quarantine xattr from the unsigned binary on install. This goes
+    # in install_steps, not custom_block: goreleaser renders custom_block at the
+    # top of the cask, where brew style rejects postflight_steps.
+    hooks:
+      post:
+        install_steps: |
+          run "/usr/bin/xattr", args: ["-dr", "com.apple.quarantine", "{{ .StagedPath }}/thingsexporter"]
